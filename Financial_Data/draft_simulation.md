@@ -124,4 +124,4 @@ legend("bottomright",
        ncol = 3, bty = "n")
 ```
 
-![](draft_simulation_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](Financial_Data/plot1e.png)<!-- -->
