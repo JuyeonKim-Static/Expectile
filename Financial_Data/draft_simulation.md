@@ -124,4 +124,4 @@ legend("bottomright",
        ncol = 3, bty = "n")
 ```
 
-![poster](Financial_Data/plot1e.png)
+![poster](./Financial_Data/plot1e.png)
