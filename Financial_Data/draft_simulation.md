@@ -556,6 +556,6 @@ legend("bottomleft", lty = c("solid", "solid"),
        legend=c("quantile","expectile") , col =c("red","blue"),bty = "n") 
 
 ```
-
+![https://github.com/JuyeonKim-Static/Expectile/blob/e3381bbb5269773532c91ebf8b5bb5e1f02c6629/Financial_Data/image/draft_DAX_CI_0.9.png](https://github.com/JuyeonKim-Static/Expectile/blob/e3381bbb5269773532c91ebf8b5bb5e1f02c6629/Financial_Data/image/draft_DAX_CI_0.9.png)<!-- -->
 
 
