@@ -373,7 +373,7 @@ legend("bottomright",
        ncol = 3, bty = "n")
 ```
 
-![](draft_simulation_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![draft_simulation_files/figure-gfm/unnamed-chunk-4-1.png](https://github.com/JuyeonKim-Static/Expectile/blob/a44dce2344c50957dd4ae6c3b42a0c6f9b9c994d/Financial_Data/image/draft_DAX_q.png)<!-- -->
 
 ``` r
 #Expectile
@@ -448,4 +448,180 @@ legend("bottomright",
        ncol = 3, bty = "n")
 ```
 
-![](draft_simulation_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![draft_simulation_files/figure-gfm/unnamed-chunk-5-1.png](https://github.com/JuyeonKim-Static/Expectile/blob/a44dce2344c50957dd4ae6c3b42a0c6f9b9c994d/Financial_Data/image/draft_DAX_e.png)<!-- -->
+
+
+##Confidence Interval for Quantile and Expectile
+
+```{r}
+df<- df1
+tau<- 0.9
+df$date<- as.Date(df$날짜,format = "%Y.%m.%d")
+x <- df[,2]
+y <- df[,3]
+
+quant_reg_0.9 <- function(x,y){
+  alpha_yx <-rq(y ~ x, tau = 0.9)$coeff[1]
+  beta_yx <- rq(y ~ x, tau = 0.9)$coeff[2]
+  alpha_xy <-rq(x ~ y, tau = 0.9)$coeff[1]
+  beta_xy <- rq(x ~ y, tau = 0.9)$coeff[2]
+  names(beta_yx) <- names(beta_xy) <- NULL
+  quant_corr_tau <- sign(beta_yx) * sqrt(beta_yx * beta_xy * (beta_yx * beta_xy > 0))
+  #밀도함수추정 for long time
+  start_time <- Sys.time()
+  n <- 500
+  f_1 =vector(length = n)
+  for(i in 1:n){
+    new_cde1 <- cde(x, y, x.margin = x[i]) #, y.margin = y_margin)
+    y_margin <- new_cde1$y
+    res <- y_margin - (alpha_yx + beta_yx * x[i])
+    where_y <- which.min(sapply(res, function(x){ifelse(x<0, Inf, x)}))
+    if(where_y == 1){
+      f_1[i] <- new_cde1$z[where_y]
+    }else{
+      f_1[i]<- (abs(res[where_y-1]) * new_cde1$z[where_y] + abs(res[where_y]) * new_cde1$z[where_y-1]) / 
+        (abs(res[where_y-1]) + abs(res[where_y]))
+    }
+  }
+  #x|y분포
+  f_2 =vector(length = n)
+  for (i in 1:n){
+    new_cde2 <- cde(y, x, x.margin = y[i]) # , y.margin = x_margin)
+    x_margin <- new_cde2$y
+    res <- x_margin - (alpha_xy + beta_xy * y[i])
+    where_x <- which.min(sapply(res, function(x){ifelse(x<0, Inf, x)}))
+    if(where_x == 1){
+      f_2[i] <- new_cde2$z[where_x]
+    }else{
+      f_2[i]<- (abs(res[where_x-1]) * new_cde2$z[where_x] + abs(res[where_x]) * new_cde2$z[where_x-1]) / 
+        (abs(res[where_x-1]) + abs(res[where_x]))
+    }
+  }
+  #R1
+  a1 <-array(0, dim =c(2,2,n)) #비어있는 행렬 생성
+  for (i in c(1:n)){
+    a1[1,1,i] <- 1
+    a1[1,2,i] <- x[i]
+    a1[2,1,i] <- x[i]
+    a1[2,2,i] <- (x[i])^2
+    a1[ , ,i] <- f_1[i] * a1[, ,i]
+  }
+  R1 <- cbind(apply(a1, c(1,2), mean), matrix(0, nrow = 2, ncol = 2))
+  #R2
+  b1 <-array(0, dim =c(2,2,n)) #비어있는 행렬 생성
+  for (i in c(1:n)){
+    b1[1,1,i] <- 1
+    b1[1,2,i] <- y[i]
+    b1[2,1,i] <- y[i]
+    b1[2,2,i] <- (y[i])^2
+    b1[ , ,i] <- f_2[i] * b1[ , ,i]
+  }
+  
+  R2 <- cbind(matrix(0, nrow = 2, ncol = 2), apply(b1, c(1,2), mean))
+  
+  #M행렬
+  M <- rbind(R1, R2)
+  
+  #H행렬
+  H <- matrix(0, ncol = 4, nrow = 4)
+  for (i in 1:n){
+    x1 <- c(1,x[i])* (tau - ifelse( (y[i]- (alpha_yx + beta_yx * x[i]))<0 ,1 ,0))
+    y1 <- c(1,y[i])* (tau - ifelse( (x[i]- (alpha_xy + beta_xy * y[i]))< 0 ,1 ,0))
+    d<-matrix(append(x1,y1) , nrow =1)
+    H <- H + (t(d) %*% d)
+  }
+  H <- H / n
+  #G행렬
+  G <- 1/2*matrix( c(0, ifelse(beta_yx * beta_xy > 0, sign(beta_yx) * sqrt(beta_xy /beta_yx), 0), 
+                     0, ifelse(beta_yx * beta_xy > 0, sign(beta_xy) * sqrt(beta_yx /beta_xy), 0)))
+  v <- solve(M, G)
+  sigma_tau_quant<- sqrt(t(v) %*% H %*% v)
+  upper <- quant_corr_tau + 1.96*sigma_tau_quant/sqrt(500)
+  lower <- quant_corr_tau - 1.96*sigma_tau_quant/sqrt(500)
+  end_time <- Sys.time()
+  elapsed_time <- end_time - start_time
+  print(paste("Elapsed time:", elapsed_time))
+  return(list(quant_corr_tau = quant_corr_tau ,sigma_tau_quant = sigma_tau_quant ,
+              upper = upper , lower = lower))
+}
+
+f_quant0.9_win<- rollapply(
+  zoo(cbind(x,y),df$date), 
+  width = 500 ,
+  function(x) quant_reg_0.9(x[,1],x[,2]), 
+  by.column=FALSE,
+  align = "center")
+
+f_quant_0.9_df <- fortify.zoo(f_quant0.9_win, index = TRUE)
+
+#expectile
+expec_reg_0.9 <- function(x,y){
+  theta_yx <- expec.reg(x, y, tau = 0.9)
+  beta_yx  <- theta_yx[2]
+  alpha_yx <- theta_yx[1]
+  theta_xy <- expec.reg(y, x, tau = 0.9)
+  beta_xy  <- theta_xy[2]
+  alpha_xy <- theta_xy[1]
+  rho_tau_expec <-  sign(beta_yx) * sqrt(beta_yx * beta_xy * (beta_yx * beta_xy > 0))
+  e_yx <- y - alpha_yx - beta_yx* x
+  e_xy <- x - alpha_xy - beta_xy* y
+  w_yx <- tau * (e_yx > 0) + (1-tau) * (e_yx <= 0)
+  w_xy <- tau * (e_xy > 0) + (1-tau) * (e_xy <= 0)
+  g <- rho_tau_expec/2*matrix(c(1/beta_yx, 1/beta_xy), ncol = 1)
+  A <- matrix(c(0,0,1,0,0,0,0,1), ncol = 4)
+  det_yx <- mean(w_yx)*mean(w_yx*x^2) - (mean(w_yx*x))^2
+  det_xy <- mean(w_xy)*mean(w_xy*y^2) - (mean(w_xy*y))^2
+  W.inv <- matrix(c(c(mean(w_yx*x^2), -mean(w_yx*x), 0, 0, -mean(w_yx*x), mean(w_yx), 0, 0)/det_yx,
+                    c(0, 0, mean(w_xy*y^2), -mean(w_xy*y), 
+                      0, 0, -mean(w_xy*y), mean(w_xy))/det_xy),ncol = 4)/2
+  V <- cov(2*cbind(e_yx*w_yx, x*e_yx*w_yx, e_xy*w_xy, y*e_xy*w_xy))
+  sigma_tau_expec <- sqrt(t(g) %*% A %*% W.inv %*% V %*% W.inv %*% t(A) %*% g)
+  upper <- rho_tau_expec +1.96*sigma_tau_expec/sqrt(500)
+  lower <- rho_tau_expec -1.96*sigma_tau_expec/sqrt(500)
+  return(list( rho_tau_expec = rho_tau_expec, sigma_tau_expec = sigma_tau_expec, 
+               upper = upper ,lower = lower))
+}
+
+
+f_expec_0.9_win <- rollapply(
+  zoo(cbind(x,y),df$date), 
+  width =500 ,
+  function(x) expec_reg_0.9(x[,1],x[,2]), 
+  by.column=FALSE,
+  align = "center")
+
+f_expec_0.9_df <- fortify.zoo(f_expec_0.9_win, index = TRUE)
+
+#plot
+year_seq <- seq(as.Date("2002-02-11"), as.Date("2022-12-31"), by = "1 year")
+global_crisis_start_date <- as.Date("2007-08-01")
+global_crisis_end_date <- as.Date("2009-03-31")
+corona_crisis_start_date <- as.Date("2019-11-17")
+plot(f_quant_0.9_df$Index, f_quant_0.9_df$quant_corr_tau , col="red", lwd=1, type="l", main="S&P 500 and DAX(2001~2022)",
+     xlab = "Date",xaxt='n', ylim= c(0,1), ylab = TeX("$rho_{tau}"))
+abline(v = global_crisis_start_date, col = "gray", lty = "dashed", lwd = 1)
+abline(v = global_crisis_end_date, col = "gray", lty = "dashed", lwd = 1)
+abline(v = corona_crisis_start_date, col = "gray", lty = "dashed", lwd = 1)
+
+lines(f_quant_0.9_df$Index, f_quant_0.9_df$upper, col="red", lwd=1 )
+lines(f_quant_0.9_df$Index, f_quant_0.9_df$lower, col="red", lwd=1)
+polygon(c(f_quant_0.9_df$Index, rev(f_quant_0.9_df$Index)),
+        c(f_quant_0.9_df$upper, rev(f_quant_0.9_df$lower)), col = "#FFBBBB66", border = NA)
+
+axis(1, at = year_seq, labels = format(year_seq, "%Y"), cex.axis = 0.5)
+text(x = as.Date("2008-01-01") + 150 , y = 0.3, "Global \n financial \n Crisis", col = "black", cex = 0.8)
+text(x = as.Date("2019-11-17") + 300 , y = 0.9 , "Corona \n Crisis", col = "black", cex = 0.8)
+
+
+lines(f_expec_0.9_df$Index,f_expec_0.9_df$rho_tau_expec , col="blue", lwd=1)
+lines(f_expec_0.9_df$Index, f_expec_0.9_df$upper, col="blue", lwd=1 )
+lines(f_expec_0.9_df$Index, f_expec_0.9_df$lower, col="blue", lwd=1)
+polygon(c(f_expec_0.9_df$Index, rev(f_expec_0.9_df$Index)),
+        c(f_expec_0.9_df$upper, rev(f_expec_0.9_df$lower)), col = "#BBAAFF66", border = NA)
+legend("bottomleft", lty = c("solid", "solid"),
+       legend=c("quantile","expectile") , col =c("red","blue"),bty = "n") 
+
+```
+
+
+
