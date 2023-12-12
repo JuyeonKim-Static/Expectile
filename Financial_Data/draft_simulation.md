@@ -124,4 +124,4 @@ legend("bottomright",
        ncol = 3, bty = "n")
 ```
 
-![poster](./Financial_Data/plot1e.png)
+![poster](https://github.com/JuyeonKim-Static/Expectile/blob/d963c2f05c82f2693f9b1efe8a7aa176f6f31a86/Financial_Data/plot1e.png)
