@@ -375,6 +375,8 @@ legend("bottomright",
 
 ![draft_simulation_files/figure-gfm/unnamed-chunk-4-1.png](https://github.com/JuyeonKim-Static/Expectile/blob/a44dce2344c50957dd4ae6c3b42a0c6f9b9c994d/Financial_Data/image/draft_DAX_q.png)<!-- -->
 
+
+
 ``` r
 #Expectile
 df$date<- as.Date(df$날짜,format = "%Y.%m.%d")
@@ -448,7 +450,7 @@ legend("bottomright",
        ncol = 3, bty = "n")
 ```
 
-![draft_simulation_files/figure-gfm/unnamed-chunk-5-1.png](https://github.com/JuyeonKim-Static/Expectile/blob/a44dce2344c50957dd4ae6c3b42a0c6f9b9c994d/Financial_Data/image/draft_DAX_e.png)<!-- -->
+![https://github.com/JuyeonKim-Static/Expectile/blob/a44dce2344c50957dd4ae6c3b42a0c6f9b9c994d/Financial_Data/image/draft_DAX_e.png](https://github.com/JuyeonKim-Static/Expectile/blob/93eec41f5420faaa4d3266e1f1f1475a1e112a21/Financial_Data/image/draft_DAX_e.png))<!-- -->
 
 
 ##Confidence Interval for Quantile and Expectile
