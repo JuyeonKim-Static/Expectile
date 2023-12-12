@@ -284,7 +284,7 @@ abline(h = pearson,col="black",lty=2)
 legend("topright", legend=c("quantile","expectile") , fill=c("red","blue"))
 ```
 
-![](draft_simulation_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![draft_simulation_files/figure-gfm/unnamed-chunk-3-1.png](https://github.com/JuyeonKim-Static/Expectile/blob/a44dce2344c50957dd4ae6c3b42a0c6f9b9c994d/Financial_Data/image/draft_DAX_corrplot.png))<!-- -->
 
 \##Comparison Between Expectile and Quantile
 
