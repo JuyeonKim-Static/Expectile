@@ -76,4 +76,4 @@ p
     ## Warning: Removed 1 rows containing non-finite values (`stat_ydensity()`).
     ## Removed 1 rows containing non-finite values (`stat_ydensity()`).
 
-![](https://github.com/JuyeonKim-Static/Expectile/blob/b39d4a079ecf22d1356153c0915a0680e9d19c12/Coverage%20SImulation/violinplot.png)<!-- -->
+![](https://github.com/JuyeonKim-Static/Expectile/blob/114eb7cae6eb86cf856593b35008129b38f79bdc/Coverage%20SImulation/Violinplot.JPG)<!-- -->
