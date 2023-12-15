@@ -141,8 +141,7 @@ gHat<- predictSurface( mKrigObject, gridList)
  title("0.1 Quantile Correlation Coefficients")
 ```
 
-![](SpatialQCorr_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
-
+![patialQCorr_files/figure-gfm/unnamed-chunk-3-1.png](https://github.com/JuyeonKim-Static/Expectile/blob/d190562688b62e429a8281d8a2dd97b456b963fe/PM10_data/image/unnamed-chunk-3-1.png))<!-- -->
 ``` r
 x <- cbind(quant_corr_seoul$long, 
            quant_corr_seoul$lat)
@@ -164,8 +163,7 @@ gHat<- predictSurface( mKrigObject, gridList)
  world( add=TRUE )
  title("0.9 Quantile Correlation Coefficients")
 ```
-
-![](SpatialQCorr_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
+![patialQCorr_files/figure-gfm/unnamed-chunk-3-2.png](https://github.com/JuyeonKim-Static/Expectile/blob/d190562688b62e429a8281d8a2dd97b456b963fe/PM10_data/image/unnamed-chunk-3-2.png))<!-- -->
 
 ``` r
 x <- cbind(expec_corr_seoul$long, 
@@ -188,8 +186,7 @@ gHat<- predictSurface( mKrigObject, gridList)
  world( add=TRUE )
  title("0.1 Expectile Correlation Coefficients")
 ```
-
-![](SpatialQCorr_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![patialQCorr_files/figure-gfm/unnamed-chunk-4-1.png](https://github.com/JuyeonKim-Static/Expectile/blob/d190562688b62e429a8281d8a2dd97b456b963fe/PM10_data/image/unnamed-chunk-4-1.png))<!-- -->
 
 ``` r
 x <- cbind(expec_corr_seoul$long, 
@@ -213,7 +210,7 @@ gHat<- predictSurface( mKrigObject, gridList)
  title("0.9 Expectile Correlation Coefficients")
 ```
 
-![](SpatialQCorr_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![patialQCorr_files/figure-gfm/unnamed-chunk-4-2.png](https://github.com/JuyeonKim-Static/Expectile/blob/d190562688b62e429a8281d8a2dd97b456b963fe/PM10_data/image/unnamed-chunk-4-2.png))<!-- -->
 
 ``` r
 library('latex2exp')
@@ -228,7 +225,7 @@ legend("bottomleft", legend = c(TeX("$\\tau = 0.1$"), TeX("$\\tau = 0.9$")), pch
 title(expression(paste(rho[tau]^{(e)}, " with Distance from Seoul")))
 ```
 
-![](SpatialQCorr_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![patialQCorr_files/figure-gfm/unnamed-chunk-5-1.png](https://github.com/JuyeonKim-Static/Expectile/blob/d190562688b62e429a8281d8a2dd97b456b963fe/PM10_data/image/unnamed-chunk-5-1.png))<!-- -->
 
 ``` r
 library(geosphere)
@@ -242,4 +239,4 @@ legend("bottomleft", legend = c(TeX("$\\tau = 0.1$"), TeX("$\\tau = 0.9$")) , pc
 title(expression(paste(rho[tau]^{(q)}, " with Distance from Seoul")))
 ```
 
-![](SpatialQCorr_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![patialQCorr_files/figure-gfm/unnamed-chunk-6-1.png](https://github.com/JuyeonKim-Static/Expectile/blob/d190562688b62e429a8281d8a2dd97b456b963fe/PM10_data/image/unnamed-chunk-6-1.png))<!-- -->
