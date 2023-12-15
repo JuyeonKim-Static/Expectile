@@ -1,4 +1,4 @@
-원하는 데이터를 뽑아오도록 하는 코드
+원하는 데이터를 뽑아오도록 하는 코드-simulation_result.R
 데이터구성 예시)
 n:  100 tau: 0.1 rho:  0.3 
  coverage (quantile corr): 0.864 
