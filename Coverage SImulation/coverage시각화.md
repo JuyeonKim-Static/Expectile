@@ -76,4 +76,4 @@ p
     ## Warning: Removed 1 rows containing non-finite values (`stat_ydensity()`).
     ## Removed 1 rows containing non-finite values (`stat_ydensity()`).
 
-![](coverage시각화_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](https://github.com/JuyeonKim-Static/Expectile/blob/b39d4a079ecf22d1356153c0915a0680e9d19c12/Coverage%20SImulation/violinplot.png)<!-- -->
